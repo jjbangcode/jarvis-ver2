@@ -1,0 +1,41 @@
+.layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.corner {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-color: var(--color-cyan);
+  opacity: 0.55;
+}
+
+.topLeft {
+  top: 12px;
+  left: 12px;
+  border-top: 2px solid;
+  border-left: 2px solid;
+}
+
+.topRight {
+  top: 12px;
+  right: 12px;
+  border-top: 2px solid;
+  border-right: 2px solid;
+}
+
+.bottomLeft {
+  bottom: 12px;
+  left: 12px;
+  border-bottom: 2px solid;
+  border-left: 2px solid;
+}
+
+.bottomRight {
+  bottom: 12px;
+  right: 12px;
+  border-bottom: 2px solid;
+  border-right: 2px solid;
+}

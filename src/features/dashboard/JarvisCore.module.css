@@ -1,0 +1,30 @@
+.wrap {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.holder {
+  width: min(92%, 560px);
+  max-height: 100%;
+  aspect-ratio: 1;
+  position: relative;
+}
+
+.holder canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.caption {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  color: var(--color-text-secondary);
+}

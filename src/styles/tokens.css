@@ -1,0 +1,22 @@
+:root {
+  --color-bg: #020611;
+  --color-panel: rgba(5, 12, 30, 0.78);
+  --color-cyan: #22e6f2;
+  --color-purple: #a855f7;
+  --color-violet: #7c3aed;
+  --color-amber: #f5b93f;
+  --color-muted: #67708f;
+  --color-text-primary: #d9e7ff;
+  --color-text-secondary: #8290ae;
+
+  --color-grid-line: rgba(34, 230, 242, 0.05);
+  --color-border: rgba(34, 230, 242, 0.28);
+  --color-border-soft: rgba(34, 230, 242, 0.14);
+
+  /* Sci-fi display face for the JARVIS wordmark/headings, mono for HUD
+     readouts. Both stacks fall back to system fonts so the layout is
+     correct even if the optional webfont fails to load. */
+  --font-display: "Orbitron", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --font-sans: system-ui, "Segoe UI", Roboto, sans-serif;
+}

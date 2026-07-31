@@ -1,0 +1,25 @@
+.row {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.button,
+.active {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.active {
+  color: var(--color-cyan);
+  border-color: var(--color-cyan);
+  background: rgba(34, 230, 242, 0.1);
+}

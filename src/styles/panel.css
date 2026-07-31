@@ -1,0 +1,44 @@
+/* Chamfered sci-fi panel: a real `border` does not render along a
+   clip-path cut, so the border is faked with two nested clipped layers —
+   an outer layer in the border color and an inner layer (inset 1px) in
+   the panel background color. */
+.panel-outer {
+  --chamfer: 14px;
+  clip-path: polygon(
+    var(--chamfer) 0,
+    100% 0,
+    100% calc(100% - var(--chamfer)),
+    calc(100% - var(--chamfer)) 100%,
+    0 100%,
+    0 var(--chamfer)
+  );
+  background: linear-gradient(135deg, var(--color-border), rgba(34, 230, 242, 0.08) 60%);
+  padding: 1px;
+}
+
+.panel-inner {
+  --chamfer: 13px;
+  clip-path: polygon(
+    var(--chamfer) 0,
+    100% 0,
+    100% calc(100% - var(--chamfer)),
+    calc(100% - var(--chamfer)) 100%,
+    0 100%,
+    0 var(--chamfer)
+  );
+  background: var(--color-panel);
+  height: 100%;
+  width: 100%;
+}
+
+.panel-chamfer-sm {
+  --chamfer: 8px;
+  clip-path: polygon(
+    var(--chamfer) 0,
+    100% 0,
+    100% calc(100% - var(--chamfer)),
+    calc(100% - var(--chamfer)) 100%,
+    0 100%,
+    0 var(--chamfer)
+  );
+}

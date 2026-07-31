@@ -1,0 +1,7 @@
+.body {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(280px, 1.1fr) minmax(220px, 1fr);
+  gap: 24px;
+  flex: 1;
+  min-height: 0;
+}

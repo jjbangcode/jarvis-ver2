@@ -1,0 +1,27 @@
+.block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(28px, 3vw, 40px);
+  letter-spacing: 0.14em;
+  color: var(--color-purple);
+  text-shadow: 0 0 22px rgba(168, 85, 247, 0.5);
+}
+
+.subtitle {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  color: var(--color-cyan);
+}
