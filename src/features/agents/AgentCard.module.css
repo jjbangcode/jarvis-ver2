@@ -1,0 +1,196 @@
+.cardWrap {
+  position: relative;
+  width: 100%;
+}
+
+.card {
+  width: 100%;
+}
+
+.card :global(.panel-inner) {
+  outline-offset: 2px;
+}
+
+.card :global(.panel-inner:focus-visible) {
+  outline: 2px solid var(--color-cyan);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  min-width: 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+/* Hexagonal/faceted icon frame — same nested-clip-path border trick as the
+   chamfered panel, but pointed on the left/right sides instead. */
+.iconFrame {
+  --status-color: var(--color-cyan);
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  padding: 1px;
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  background: linear-gradient(135deg, var(--status-color), rgba(255, 255, 255, 0.08) 70%);
+  display: flex;
+}
+
+.icon {
+  flex: 1;
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  background: var(--color-panel);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--status-color);
+}
+
+.icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1 1 auto;
+  gap: 1px;
+}
+
+.index {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: var(--color-text-secondary);
+}
+
+.name {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--color-text-primary);
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.badge {
+  --status-color: var(--color-cyan);
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 7px;
+  border: 1px solid var(--status-color);
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--status-color);
+  white-space: nowrap;
+}
+
+.badgeGlyph {
+  font-size: 9px;
+  line-height: 1;
+}
+
+.activity {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.progressTrack {
+  position: relative;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.progressFill {
+  --status-color: var(--color-amber);
+  height: 100%;
+  background: var(--status-color);
+  transition: width 0.3s ease;
+}
+
+.progressIndeterminate {
+  --status-color: var(--color-amber);
+  position: absolute;
+  inset: 0;
+  width: 40%;
+  background: var(--status-color);
+  animation: indeterminate 1.4s ease-in-out infinite;
+}
+
+@keyframes indeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(350%);
+  }
+}
+
+.logList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.logLine {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.logLine::before {
+  content: "› ";
+}
+
+/* Connection port: a small anchor dot + stub line on the edge facing the
+   central Jarvis Core, ready for S4's SVG connector overlay to attach to. */
+.port {
+  --status-color: var(--color-cyan);
+  position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  margin-top: -5px;
+  border-radius: 50%;
+  background: var(--status-color);
+  box-shadow: 0 0 6px 1px var(--status-color);
+}
+
+.portRight .port {
+  right: -5px;
+}
+
+.portLeft .port {
+  left: -5px;
+}

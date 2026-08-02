@@ -14,6 +14,43 @@ const PARTICLES = generateCoreParticles(340);
 const RIPPLE_RING_COUNT = 3;
 
 /**
+ * Structural concentric rings encircling the core, always visible (not
+ * only while "speaking" — that's the separate expanding-ripple cue below).
+ * Each ring is a dashed circle whose dash offset animates over time, so it
+ * reads as slowly rotating; sign of `speed` sets the direction. Radii are
+ * fractions of the particle-sphere radius.
+ */
+const CORE_RINGS: readonly {
+  readonly radiusFraction: number;
+  readonly segments: number;
+  readonly dashRatio: number;
+  readonly speed: number;
+  readonly width: number;
+  readonly opacity: number;
+}[] = [
+  { radiusFraction: 0.36, segments: 28, dashRatio: 0.55, speed: 0.05, width: 1, opacity: 0.32 },
+  { radiusFraction: 0.54, segments: 42, dashRatio: 0.45, speed: -0.035, width: 1, opacity: 0.26 },
+  { radiusFraction: 0.72, segments: 60, dashRatio: 0.35, speed: 0.024, width: 1, opacity: 0.22 },
+  { radiusFraction: 0.9, segments: 80, dashRatio: 0.28, speed: -0.016, width: 1.2, opacity: 0.2 },
+];
+
+/** Outer HUD dial arcs, in the band between the sphere and the tick ring. Radii are fractions of the canvas half-extent. */
+const DIAL_ARCS: readonly {
+  readonly radiusFraction: number;
+  readonly startAngle: number;
+  readonly sweep: number;
+  readonly speed: number;
+  readonly width: number;
+}[] = [
+  { radiusFraction: 0.87, startAngle: 0.35, sweep: 1.1, speed: 0.02, width: 2 },
+  { radiusFraction: 0.87, startAngle: 3.4, sweep: 0.6, speed: -0.014, width: 2 },
+  { radiusFraction: 0.94, startAngle: 5.1, sweep: 1.6, speed: 0.011, width: 1.4 },
+];
+
+const TICK_COUNT = 60;
+const DOT_ORBIT_COUNT = 48;
+
+/**
  * Central Jarvis Core visualization: a dense glowing particle sphere
  * (per reference) whose color follows the current state, with the inner
  * core pulsing/rippling dynamically while "speaking". Runs its own
@@ -61,7 +98,10 @@ export function JarvisCore({ state = "idle", className = "" }: JarvisCoreProps) 
       const t = elapsedMs / 1000;
       const cx = width / 2;
       const cy = height / 2;
-      const outerRadius = (Math.min(width, height) / 2) * 0.94;
+      // maxRadius is the canvas half-extent; the particle sphere only fills
+      // part of it so the outer HUD dial (ticks/arcs/dotted orbit) has room.
+      const maxRadius = (Math.min(width, height) / 2) * 0.98;
+      const outerRadius = maxRadius * 0.62;
 
       const config = CORE_STATE_CONFIG[stateRef.current];
       const [pr, pg, pb] = hexToRgb(config.accentPrimary);
@@ -80,6 +120,41 @@ export function JarvisCore({ state = "idle", className = "" }: JarvisCoreProps) 
       ctx.save();
       ctx.translate(cx, cy);
 
+      // Outer HUD dial: tick marks, arc segments and a dotted orbit ring in
+      // the band between the particle sphere and the canvas edge.
+      for (let i = 0; i < TICK_COUNT; i += 1) {
+        const isMajor = i % 5 === 0;
+        const angle = (i / TICK_COUNT) * Math.PI * 2;
+        const rInner = maxRadius * (isMajor ? 0.8 : 0.83);
+        const rOuter = maxRadius * (isMajor ? 0.94 : 0.885);
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(${sr}, ${sg}, ${sb}, ${isMajor ? 0.38 : 0.16})`;
+        ctx.lineWidth = isMajor ? 1.4 : 0.8;
+        ctx.moveTo(Math.cos(angle) * rInner, Math.sin(angle) * rInner);
+        ctx.lineTo(Math.cos(angle) * rOuter, Math.sin(angle) * rOuter);
+        ctx.stroke();
+      }
+
+      for (const dialArc of DIAL_ARCS) {
+        const r = maxRadius * dialArc.radiusFraction;
+        const rotation = motion ? t * dialArc.speed : 0;
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(${pr}, ${pg}, ${pb}, 0.3)`;
+        ctx.lineWidth = dialArc.width;
+        ctx.arc(0, 0, r, dialArc.startAngle + rotation, dialArc.startAngle + rotation + dialArc.sweep);
+        ctx.stroke();
+      }
+
+      const dotOrbitRadius = maxRadius * 0.965;
+      const dotOrbitRotation = motion ? t * 0.012 : 0;
+      for (let i = 0; i < DOT_ORBIT_COUNT; i += 1) {
+        const angle = (i / DOT_ORBIT_COUNT) * Math.PI * 2 + dotOrbitRotation;
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(${sr}, ${sg}, ${sb}, 0.28)`;
+        ctx.arc(Math.cos(angle) * dotOrbitRadius, Math.sin(angle) * dotOrbitRadius, 1.1, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
       // Dense particle field: the sphere itself.
       for (const particle of PARTICLES) {
         const angle = particle.angle + (motion ? t * particle.angularSpeed : 0);
@@ -97,6 +172,24 @@ export function JarvisCore({ state = "idle", className = "" }: JarvisCoreProps) 
         ctx.fill();
       }
       ctx.shadowBlur = 0;
+
+      // Structural concentric rings around the core — always visible, each
+      // rotating at its own speed/direction via an animated dash offset.
+      for (const ring of CORE_RINGS) {
+        const r = outerRadius * ring.radiusFraction;
+        const circumference = 2 * Math.PI * r;
+        const period = circumference / ring.segments;
+        const dashLen = period * ring.dashRatio;
+        ctx.save();
+        ctx.strokeStyle = `rgba(${pr}, ${pg}, ${pb}, ${ring.opacity})`;
+        ctx.lineWidth = ring.width;
+        ctx.setLineDash([dashLen, period - dashLen]);
+        ctx.lineDashOffset = motion ? t * ring.speed * circumference : 0;
+        ctx.beginPath();
+        ctx.arc(0, 0, r, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      }
 
       // Expanding ripple rings while speaking — the "inner circle moves" cue.
       if (config.dynamic) {

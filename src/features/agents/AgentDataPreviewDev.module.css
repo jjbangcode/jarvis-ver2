@@ -1,0 +1,37 @@
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.mockTag {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--color-amber);
+  border: 1px dashed var(--color-amber);
+  border-radius: 4px;
+  padding: 3px 8px;
+}
+
+.button,
+.active {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.active {
+  color: var(--color-cyan);
+  border-color: var(--color-cyan);
+  background: rgba(34, 230, 242, 0.1);
+}

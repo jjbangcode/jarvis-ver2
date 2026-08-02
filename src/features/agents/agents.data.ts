@@ -1,12 +1,93 @@
-import type { AgentPlaceholder } from "@/types/dashboard";
+import type { AgentRun } from "@/types/dashboard";
 
-/** Static agent roster (number + name only) for the S1 layout placeholder. */
-export const AGENT_ROSTER: readonly AgentPlaceholder[] = [
-  { id: "orchestrator", index: 1, name: "Orchestrator" },
-  { id: "semantic-retrieval", index: 2, name: "Semantic Retrieval Agent" },
-  { id: "lexical-retrieval", index: 3, name: "Lexical Retrieval Agent" },
-  { id: "ontology", index: 4, name: "Ontology Agent" },
-  { id: "re-ranking", index: 5, name: "Re-ranking Agent" },
-  { id: "llm-reasoning", index: 6, name: "LLM Reasoning Agent" },
-  { id: "validation", index: 7, name: "Validation Agent" },
+/**
+ * MOCK fixture — a single illustrative snapshot of a retrieval pipeline run.
+ * No backend is connected yet (that lands in S5+); this is the only place
+ * demo agent state is defined, so components never hardcode status/copy.
+ */
+export const AGENT_RUNS: readonly AgentRun[] = [
+  {
+    id: "orchestrator",
+    number: 1,
+    name: "Orchestrator",
+    status: "running",
+    activity: "Coordinating agent pipeline",
+    logs: ["Received structured command", "Dispatched retrieval tasks", "Awaiting reranking output"],
+    progress: null,
+    startedAt: "2026-08-02T09:12:03Z",
+    endedAt: null,
+    error: null,
+  },
+  {
+    id: "semantic-retrieval",
+    number: 2,
+    name: "Semantic Retrieval Agent",
+    status: "completed",
+    activity: "Vector search complete",
+    logs: ["Queried embedding index", "42 candidates retrieved", "Handed off to reranker"],
+    progress: 100,
+    startedAt: "2026-08-02T09:12:04Z",
+    endedAt: "2026-08-02T09:12:09Z",
+    error: null,
+  },
+  {
+    id: "lexical-retrieval",
+    number: 3,
+    name: "Lexical Retrieval Agent",
+    status: "completed",
+    activity: "BM25 search complete",
+    logs: ["Queried inverted index", "37 candidates retrieved"],
+    progress: 100,
+    startedAt: "2026-08-02T09:12:04Z",
+    endedAt: "2026-08-02T09:12:08Z",
+    error: null,
+  },
+  {
+    id: "ontology",
+    number: 4,
+    name: "Ontology Agent",
+    status: "loading",
+    activity: "Resolving term hierarchy",
+    logs: ["Loaded biomedical ontology graph", "Mapping entities to UMLS concepts"],
+    progress: 62,
+    startedAt: "2026-08-02T09:12:09Z",
+    endedAt: null,
+    error: null,
+  },
+  {
+    id: "re-ranking",
+    number: 5,
+    name: "Re-ranking Agent",
+    status: "waiting",
+    activity: "Waiting on retrieval agents",
+    logs: [],
+    progress: null,
+    startedAt: null,
+    endedAt: null,
+    error: null,
+  },
+  {
+    id: "llm-reasoning",
+    number: 6,
+    name: "LLM Reasoning Agent",
+    status: "queued",
+    activity: "Queued for execution",
+    logs: [],
+    progress: null,
+    startedAt: null,
+    endedAt: null,
+    error: null,
+  },
+  {
+    id: "validation",
+    number: 7,
+    name: "Validation Agent",
+    status: "error",
+    activity: "Schema validation failed",
+    logs: ["Received draft answer", "Missing citation for claim #2"],
+    progress: null,
+    startedAt: "2026-08-02T09:12:10Z",
+    endedAt: "2026-08-02T09:12:11Z",
+    error: "Validation schema mismatch: missing required field 'citations'",
+  },
 ];

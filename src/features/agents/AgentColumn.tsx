@@ -1,18 +1,19 @@
 import type { ReactNode } from "react";
-import type { AgentPlaceholder } from "@/types/dashboard";
-import { AgentCardPlaceholder } from "./AgentCardPlaceholder";
+import type { AgentRun } from "@/types/dashboard";
+import { AgentCard } from "./AgentCard";
 import styles from "./AgentColumn.module.css";
 
 interface AgentColumnProps {
-  readonly agents: readonly AgentPlaceholder[];
+  readonly agents: readonly AgentRun[];
+  readonly side: "left" | "right";
   readonly children?: ReactNode;
 }
 
-export function AgentColumn({ agents, children }: AgentColumnProps) {
+export function AgentColumn({ agents, side, children }: AgentColumnProps) {
   return (
     <div className={styles.column}>
       {agents.map((agent) => (
-        <AgentCardPlaceholder key={agent.id} agent={agent} />
+        <AgentCard key={agent.id} agent={agent} side={side} />
       ))}
       {children}
     </div>

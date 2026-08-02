@@ -1,8 +1,8 @@
 /**
  * idle = 대기중, listening = 음성인식중, processing = 처리중,
- * speaking = 답변중, error = 오류.
+ * completed = 작업완료, speaking = 답변중, error = 오류.
  */
-export type CoreState = "idle" | "listening" | "processing" | "speaking" | "error";
+export type CoreState = "idle" | "listening" | "processing" | "completed" | "speaking" | "error";
 
 export interface CoreStateConfig {
   readonly label: string;
