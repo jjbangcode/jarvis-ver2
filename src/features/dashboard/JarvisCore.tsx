@@ -280,7 +280,7 @@ export function JarvisCore({ state = "idle", className = "" }: JarvisCoreProps) 
 
   return (
     <div className={`${styles.wrap} ${className}`}>
-      <div ref={holderRef} className={styles.holder}>
+      <div ref={holderRef} className={styles.holder} data-core-anchor="true">
         <canvas ref={canvasRef} role="img" aria-label={`Jarvis core visualization, state ${label}`} />
       </div>
       <p className={styles.caption}>{label}</p>

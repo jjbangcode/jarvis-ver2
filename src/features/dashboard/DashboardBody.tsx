@@ -2,7 +2,8 @@ import type { CoreState } from "@/types/core";
 import type { AgentRun } from "@/types/dashboard";
 import { AgentColumn } from "@/features/agents/AgentColumn";
 import { AGENT_RUNS } from "@/features/agents/agents.data";
-import { StatusLegend } from "@/features/agents/StatusLegend";
+import { CommandInput } from "./CommandInput";
+import { ConnectorOverlay } from "./ConnectorOverlay";
 import { JarvisCore } from "./JarvisCore";
 import styles from "./DashboardBody.module.css";
 
@@ -19,10 +20,11 @@ export function DashboardBody({ coreState, agents = AGENT_RUNS }: DashboardBodyP
 
   return (
     <div className={styles.body}>
+      <ConnectorOverlay agents={agents} />
       <AgentColumn agents={leftAgents} side="left" />
       <JarvisCore state={coreState} />
       <AgentColumn agents={rightAgents} side="right">
-        <StatusLegend />
+        <CommandInput />
       </AgentColumn>
     </div>
   );

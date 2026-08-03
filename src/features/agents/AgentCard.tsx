@@ -77,7 +77,12 @@ export function AgentCard({ agent, side }: AgentCardProps) {
         )}
         </div>
       </PanelFrame>
-      <span className={styles.port} style={{ ["--status-color" as string]: meta.color }} aria-hidden="true" />
+      <span
+        className={styles.port}
+        style={{ ["--status-color" as string]: meta.color }}
+        data-agent-port={agent.id}
+        aria-hidden="true"
+      />
     </div>
   );
 }

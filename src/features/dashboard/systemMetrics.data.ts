@@ -1,9 +1,17 @@
 import type { MetricLabel } from "@/types/dashboard";
 
-/** Labels only for S1 — no live values are wired up yet. */
-export const SYSTEM_METRIC_LABELS: readonly MetricLabel[] = [
-  { id: "cpu", label: "CPU" },
-  { id: "mem", label: "MEM" },
-  { id: "net", label: "NET" },
-  { id: "tasks", label: "TASKS" },
+export interface SystemMetric extends MetricLabel {
+  readonly value: string;
+}
+
+/**
+ * MOCK fixture — a single illustrative snapshot of system telemetry. No
+ * backend is connected yet (that lands in S5+); this is the only place
+ * demo metric values are defined.
+ */
+export const SYSTEM_METRICS: readonly SystemMetric[] = [
+  { id: "cpu", label: "CPU", value: "42%" },
+  { id: "mem", label: "MEM", value: "3.1 GB" },
+  { id: "net", label: "NET", value: "128 KB/s" },
+  { id: "tasks", label: "TASKS", value: "3/7" },
 ];

@@ -2,10 +2,10 @@ import type { AgentRun } from "@/types/dashboard";
 import { AGENT_STATUS_ORDER } from "./agentStatus";
 
 /**
- * Dev-only fixtures for the S3 state preview toggle (CoreStatePreviewDev's
- * sibling for agents). Never imported by production data paths — only by
- * the dev toggle component, so the "one demo shown by default" rule for
- * AGENT_RUNS in agents.data.ts still holds.
+ * Dev-only fixtures for the runtime scenario toggle (RuntimeScenarioDev).
+ * Never imported by production data paths — only by the dev toggle's
+ * "ALL STATUSES" / "STRESS TEST" scenarios, so the "one live demo shown by
+ * default" rule for the runtimeTimeline.ts pipeline still holds.
  */
 
 /** One card per AgentStatus, so every status/color/glyph combination is visible at once. */
