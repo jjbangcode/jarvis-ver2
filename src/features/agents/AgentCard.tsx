@@ -2,6 +2,7 @@ import type { AgentRun } from "@/types/dashboard";
 import { PanelFrame } from "@/components/PanelFrame";
 import { AGENT_STATUS_META } from "./agentStatus";
 import { AgentIcon } from "./AgentIcon";
+import { EmotionAgentPanel } from "./EmotionAgentPanel";
 import styles from "./AgentCard.module.css";
 
 interface AgentCardProps {
@@ -66,7 +67,7 @@ export function AgentCard({ agent, side }: AgentCardProps) {
           </div>
         )}
 
-        {recentLogs.length > 0 && (
+        {agent.id === "emotion" ? <EmotionAgentPanel /> : recentLogs.length > 0 && (
           <ul className={styles.logList}>
             {recentLogs.map((line, i) => (
               <li key={i} className={styles.logLine} title={line}>

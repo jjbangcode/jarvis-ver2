@@ -7,17 +7,35 @@
   flex-direction: column;
 }
 
-.modelSelect {
-  width: 100%;
+.modelRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   background: rgba(34, 230, 242, 0.06);
-  border: none;
   border-bottom: 1px solid var(--color-border-soft);
-  outline: none;
-  padding: 6px 12px;
+  padding: 7px 12px;
+}
+
+.modelLabel {
+  flex: 0 0 auto;
   font-family: var(--font-mono);
   font-size: 9px;
-  letter-spacing: 0.08em;
-  color: var(--color-text-secondary);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--color-cyan);
+}
+
+.modelSelect {
+  flex: 1 1 auto;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--color-text-primary);
+  cursor: pointer;
 }
 
 .modelSelect:focus-visible {

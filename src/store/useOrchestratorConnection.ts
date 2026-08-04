@@ -5,7 +5,7 @@ import type { AgentRun } from "@/types/dashboard";
 /** Local FastAPI + Ollama orchestrator (see server/) — dev-only, hardcoded. */
 const ORCHESTRATOR_HTTP_URL = "http://localhost:8787";
 const ORCHESTRATOR_WS_URL = "ws://localhost:8787/ws/runtime";
-const PREFERRED_DEFAULT_MODEL = "qwen2.5:7b-instruct-q4_K_M";
+const PREFERRED_DEFAULT_MODEL = "qwen2.5:14b";
 
 interface SnapshotMessage {
   readonly type: "snapshot";
@@ -26,7 +26,7 @@ export interface OrchestratorConnection {
   readonly models: readonly string[];
   readonly selectedModel: string;
   readonly setSelectedModel: (model: string) => void;
-  readonly sendCommand: (text: string) => void;
+  readonly sendCommand: (text: string, emotion?: string) => void;
 }
 
 /**
@@ -41,12 +41,33 @@ export function useOrchestratorConnection(): OrchestratorConnection {
   const [models, setModels] = useState<readonly string[]>([]);
   const [selectedModel, setSelectedModel] = useState(PREFERRED_DEFAULT_MODEL);
   const socketRef = useRef<WebSocket | null>(null);
-  const pendingRef = useRef<{ text: string; model: string } | null>(null);
+  const pendingRef = useRef<{ text: string; model: string; emotion: string } | null>(null);
   const selectedModelRef = useRef(selectedModel);
+  const audioQueueRef = useRef<string[]>([]);
+  const isPlayingAudioRef = useRef(false);
 
   useEffect(() => {
     selectedModelRef.current = selectedModel;
   }, [selectedModel]);
+
+  // TTS now streams as several independently-playable WAV chunks (see
+  // orchestrator.py) instead of one big blob, so the first sound lands well
+  // before the full reply finishes synthesizing — queue and chain them.
+  const playNextAudio = useCallback(function playNextAudio() {
+    const url = audioQueueRef.current.shift();
+    if (!url) {
+      isPlayingAudioRef.current = false;
+      return;
+    }
+    isPlayingAudioRef.current = true;
+    const audio = new Audio(url);
+    const advance = () => {
+      URL.revokeObjectURL(url);
+      playNextAudio();
+    };
+    audio.addEventListener("ended", advance);
+    audio.play().catch(advance);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -66,6 +87,7 @@ export function useOrchestratorConnection(): OrchestratorConnection {
 
   useEffect(() => {
     const socket = new WebSocket(ORCHESTRATOR_WS_URL);
+    socket.binaryType = "arraybuffer";
     socketRef.current = socket;
 
     socket.onopen = () => {
@@ -76,6 +98,13 @@ export function useOrchestratorConnection(): OrchestratorConnection {
     };
 
     socket.onmessage = (event) => {
+      if (event.data instanceof ArrayBuffer) {
+        const blob = new Blob([event.data], { type: "audio/wav" });
+        const url = URL.createObjectURL(blob);
+        audioQueueRef.current.push(url);
+        if (!isPlayingAudioRef.current) playNextAudio();
+        return;
+      }
       let message: unknown;
       try {
         message = JSON.parse(event.data as string);
@@ -91,10 +120,10 @@ export function useOrchestratorConnection(): OrchestratorConnection {
       socket.close();
       socketRef.current = null;
     };
-  }, []);
+  }, [playNextAudio]);
 
-  const sendCommand = useCallback((text: string) => {
-    const command = { text, model: selectedModelRef.current };
+  const sendCommand = useCallback((text: string, emotion = "neutral") => {
+    const command = { text, model: selectedModelRef.current, emotion };
     const socket = socketRef.current;
     if (socket && socket.readyState === WebSocket.OPEN) {
       socket.send(JSON.stringify({ type: "command", ...command }));

@@ -49,13 +49,13 @@ const orchestratorRunning3: AgentRun = {
   logs: ["Received structured command", "Dispatched retrieval tasks", "Awaiting reranking output"],
 };
 
-// --- semantic-retrieval -------------------------------------------------
+// --- emotion -------------------------------------------------------------
 const semanticQueued: AgentRun = {
-  id: "semantic-retrieval",
+  id: "emotion",
   number: 2,
-  name: "Semantic Retrieval Agent",
+  name: "Emotion Agent",
   status: "waiting",
-  activity: "Waiting on orchestrator dispatch",
+  activity: "Waiting for voice input",
   logs: [],
   progress: null,
   startedAt: null,
@@ -65,15 +65,15 @@ const semanticQueued: AgentRun = {
 const semanticRunning: AgentRun = {
   ...semanticQueued,
   status: "running",
-  activity: "Querying embedding index",
-  logs: ["Queried embedding index"],
+  activity: "Analyzing vocal emotion",
+  logs: ["STT audio received"],
   startedAt: "2026-08-02T09:12:04Z",
 };
 const semanticCompleted: AgentRun = {
   ...semanticRunning,
   status: "completed",
-  activity: "Vector search complete",
-  logs: ["Queried embedding index", "42 candidates retrieved", "Handed off to reranker"],
+  activity: "Emotion context ready",
+  logs: ["STT audio received", "Emotion context detected"],
   progress: 100,
   endedAt: "2026-08-02T09:12:09Z",
 };

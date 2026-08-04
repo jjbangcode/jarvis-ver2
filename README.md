@@ -25,9 +25,19 @@ JARVIS multi-agent HUD dashboard, built step by step (S0–S10). React + TypeScr
   the right column) sends the typed command + a picked local model; the Orchestrator card and `coreState`
   are driven live by the backend while a run is in flight, then hand back to the mock timeline. The other six
   agent cards are still mock — they need real search/rerank tools that don't exist yet.
+- S6.5 — voice in/out for the Orchestrator: `server/app/stt/` (`STTFactory`) and `server/app/tts/`
+  (`TTSFactory`) pick a backend per session. STT is `local` (MLX Audio's Whisper endpoint, Apple GPU) or
+  `cloud` (Deepgram real-time streaming, needs `DEEPGRAM_API_KEY`); the frontend's `VoiceControls` (in
+  `CommandInput`) captures the mic, streams PCM16 over `/ws/voice`, and auto-submits the final transcript.
+  TTS is a cloned local voice served by the same MLX Audio server (`~/Documents/자비스`'s existing
+  voice-cloning setup, reused as-is) — `run_orchestrator` synthesizes the final response and pushes it as a
+  binary WAV frame over `/ws/runtime`, which `useOrchestratorConnection` plays back directly.
+- S7 — first modular agent: `server/agents/emotion/` runs the existing STT final decoding and
+  `emotion2vec` speech-emotion recognition in parallel, falls back to `neutral`, and injects the result into
+  the Qwen2.5 system prompt. The dashboard's `EMOTION TEST` window can test STT + SER without dispatching a
+  command to JARVIS at `/emotion-test.html`.
 
-Later stages (Whisper voice input, extending real integration to the other agents, TTS, packaging) are not
-implemented yet.
+Later stages (extending real integration to the other agents, packaging) are not implemented yet.
 
 ## Scripts
 
@@ -49,6 +59,29 @@ ollama serve &                          # local Ollama daemon, if not already ru
 ./.venv/bin/uvicorn app.main:app --port 8787
 ```
 
+Voice (optional — text commands work without it):
+
+- Local STT (`MlxWhisperEngine`) runs `mlx-whisper` in-process (Apple GPU) — no extra server needed.
+  Override the model with `JARVIS_WHISPER_MODEL` (default `mlx-community/whisper-large-v3-turbo`).
+  (Deliberately *not* the mlx_audio.server `/v1/audio/transcriptions` route — that route crashes the whole
+  server process on this machine with an MLX GPU-stream threading error.)
+- Local TTS (`MlxAudioEngine`) needs the MLX Audio server running
+  (`python -m mlx_audio.server --host 127.0.0.1 --port 8877`) for the cloned voice; defaults to that address
+  and to this machine's existing reference file. Override with `JARVIS_MLX_TTS_URL`, `JARVIS_MLX_TTS_MODEL`,
+  `JARVIS_MLX_VOICE_REFERENCE`, `JARVIS_MLX_VOICE_REFERENCE_TEXT` env vars for a different setup.
+- Cloud STT (Deepgram) needs `DEEPGRAM_API_KEY` set before starting uvicorn.
+
+Emotion agent (optional — voice input falls back to `neutral` until installed):
+
+```bash
+cd server
+./.venv/bin/pip install -r agents/emotion/requirements.txt
+./.venv/bin/python -m unittest discover -s agents/emotion/tests -v
+```
+
+Start the frontend and backend, then open `http://localhost:5173/emotion-test.html` to see the final transcript
+and detected emotion without sending the transcript to Ollama.
+
 ## Structure
 
 ```
@@ -57,7 +90,7 @@ src/
   features/
     dashboard/   shell, top bar, core visualization, connector overlay, command input, footer
     agents/      agent status model, cards, icons, mock fixtures
-    voice/       reserved for the voice input feature
+    voice/       mic capture (useVoiceInput), VoiceControls (local/cloud toggle + mic button)
   hooks/         reserved for shared hooks
   lib/           framework-agnostic helpers (prng, particle layout, color)
   store/         RuntimeStoreProvider/useRuntimeStore — the central coreState + agents store,
@@ -66,4 +99,7 @@ src/
   types/         shared TypeScript types
 
 server/          FastAPI + Ollama orchestrator backend (Python, separate from the Vite app)
+  agents/emotion/ first independent agent — parallel STT/SER, dynamic prompt, tests
+  app/stt/       STTFactory — local (MLX Whisper) / cloud (Deepgram) speech-to-text engines
+  app/tts/       TTSFactory — local cloned-voice text-to-speech via MLX Audio
 ```

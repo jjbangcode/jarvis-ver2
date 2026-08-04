@@ -1,0 +1,205 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 12px 8px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.modeToggle {
+  display: flex;
+  border: 1px solid var(--color-border-soft);
+}
+
+.modeButton {
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 3px 8px;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  color: var(--color-muted);
+  cursor: pointer;
+}
+
+.modeButton:hover {
+  color: var(--color-text-secondary);
+}
+
+.modeButtonActive {
+  color: var(--color-bg);
+  background: var(--color-cyan);
+}
+
+.modeButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.micButton {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: 1px solid var(--color-border-soft);
+  outline: none;
+  padding: 3px 8px;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.micButton:hover {
+  border-color: var(--color-cyan);
+  color: var(--color-cyan);
+}
+
+/* Armed: always-listening is on, but not currently mid-utterance. */
+.micButtonActive {
+  border-color: var(--color-cyan);
+  color: var(--color-cyan);
+}
+
+/* Actively capturing an utterance right now. */
+.micButtonSpeaking {
+  border-color: var(--color-amber);
+  color: var(--color-amber);
+}
+
+.micDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.micButtonSpeaking .micDot {
+  animation: pulse 1.1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+.interim {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--color-muted);
+}
+
+.error {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--color-amber);
+}
+
+.history {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 2px 0 0;
+  padding: 8px 0 2px;
+  border-top: 1px solid var(--color-border-soft);
+  list-style: none;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.historyItem {
+  --emotion-color: #22e6f2;
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 8px 10px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-text-primary);
+  border: 1px solid color-mix(in srgb, var(--emotion-color) 45%, transparent);
+  border-left: 3px solid var(--emotion-color);
+  border-radius: 3px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--emotion-color) 18%, transparent),
+    color-mix(in srgb, var(--emotion-color) 3%, transparent) 65%
+  );
+  box-shadow: inset 0 0 16px color-mix(in srgb, var(--emotion-color) 7%, transparent);
+}
+
+.historyItem[data-emotion="happy"] {
+  --emotion-color: #facc15;
+}
+
+.historyItem[data-emotion="sad"] {
+  --emotion-color: #4f8cff;
+}
+
+.historyItem[data-emotion="angry"] {
+  --emotion-color: #ff405c;
+}
+
+.historyItem[data-emotion="fearful"] {
+  --emotion-color: #a855f7;
+}
+
+.historyItem[data-emotion="disgusted"] {
+  --emotion-color: #76d13b;
+}
+
+.historyItem[data-emotion="surprised"] {
+  --emotion-color: #ff9d2e;
+}
+
+.historyItem[data-emotion="neutral"] {
+  --emotion-color: #22e6f2;
+}
+
+.historyText {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.historyPrompt {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 12px;
+}
+
+.emotionLight {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--emotion-color);
+  box-shadow: 0 0 8px var(--emotion-color);
+}
+
+.emotionIcon {
+  flex: 0 0 auto;
+  margin-left: auto;
+  font-size: 16px;
+  line-height: 1;
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--emotion-color) 70%, transparent));
+}

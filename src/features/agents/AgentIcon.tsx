@@ -27,14 +27,12 @@ function OrchestratorGlyph() {
   );
 }
 
-/** Clustered nodes: semantic/embedding-space similarity. */
-function SemanticGlyph() {
+/** Voice waveform + heart: speech emotion recognition. */
+function EmotionGlyph() {
   return (
     <svg {...SHARED_PROPS}>
-      <circle cx="9" cy="8" r="3.2" />
-      <circle cx="16" cy="14" r="2.4" />
-      <circle cx="8" cy="17" r="1.8" />
-      <path d="M11.2 10.1l3.2 2.3M7.5 10.5l-0.1 4.8" />
+      <path d="M3 9v6M6 6v12M9 9v6" />
+      <path d="M16.5 18.5s-5-2.8-5-6.5a2.8 2.8 0 015-1.8 2.8 2.8 0 015 1.8c0 3.7-5 6.5-5 6.5z" />
     </svg>
   );
 }
@@ -106,7 +104,7 @@ function GenericGlyph() {
 
 const GLYPHS = [
   OrchestratorGlyph,
-  SemanticGlyph,
+  EmotionGlyph,
   LexicalGlyph,
   OntologyGlyph,
   RerankingGlyph,

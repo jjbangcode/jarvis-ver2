@@ -1,0 +1,119 @@
+.page {
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.window {
+  width: min(680px, 100%);
+  padding: 28px;
+  border: 1px solid var(--color-cyan);
+  border-radius: 6px;
+  background: rgba(5, 17, 29, 0.96);
+  box-shadow: 0 0 40px rgba(34, 230, 242, 0.18);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.eyebrow,
+.status {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--color-text-secondary);
+}
+
+.title {
+  margin: 6px 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(18px, 4vw, 26px);
+  letter-spacing: 0.1em;
+  color: var(--color-cyan);
+}
+
+.status {
+  padding: 6px 9px;
+  color: var(--color-cyan);
+  border: 1px solid var(--color-cyan);
+  border-radius: 3px;
+  background: rgba(34, 230, 242, 0.08);
+}
+
+.help {
+  margin: 20px 0;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.legend {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 7px;
+  margin: 0 12px 18px;
+}
+
+.legend span {
+  --legend-color: #22e6f2;
+
+  display: grid;
+  grid-template-columns: auto auto;
+  place-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 38px;
+  border-bottom: 3px solid var(--legend-color);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--legend-color) 10%, transparent);
+  font-size: 17px;
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--legend-color) 45%, transparent));
+}
+
+.legend small {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  color: var(--color-text-secondary);
+}
+
+.legend span[data-emotion="happy"] {
+  --legend-color: #facc15;
+}
+
+.legend span[data-emotion="sad"] {
+  --legend-color: #4f8cff;
+}
+
+.legend span[data-emotion="angry"] {
+  --legend-color: #ff405c;
+}
+
+.legend span[data-emotion="fearful"] {
+  --legend-color: #a855f7;
+}
+
+.legend span[data-emotion="disgusted"] {
+  --legend-color: #76d13b;
+}
+
+.legend span[data-emotion="surprised"] {
+  --legend-color: #ff9d2e;
+}
+
+@media (max-width: 560px) {
+  .window {
+    padding: 20px;
+  }
+
+  .legend {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+}

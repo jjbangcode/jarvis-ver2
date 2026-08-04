@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { PanelFrame } from "@/components/PanelFrame";
 import { useRuntimeStore } from "@/store/useRuntimeStore";
+import { VoiceControls } from "@/features/voice/VoiceControls";
 import styles from "./CommandInput.module.css";
 
 /**
@@ -12,7 +13,7 @@ import styles from "./CommandInput.module.css";
  */
 export function CommandInput() {
   const [value, setValue] = useState("");
-  const { triggerRun, models, selectedModel, setSelectedModel } = useRuntimeStore();
+  const { triggerRun, models, selectedModel, setSelectedModel, isAssistantBusy } = useRuntimeStore();
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -21,26 +22,34 @@ export function CommandInput() {
     setValue("");
   }
 
+  function handleVoiceFinalText(text: string, emotion: string) {
+    if (!text.trim()) return;
+    triggerRun(text, emotion);
+  }
+
   return (
     <PanelFrame as="section" ariaLabel="Command input" className={styles.panel}>
       <div className={styles.wrap}>
-        <select
-          className={styles.modelSelect}
-          value={selectedModel}
-          onChange={(event) => setSelectedModel(event.target.value)}
-          aria-label="Local model"
-          disabled={models.length === 0}
-        >
-          {models.length === 0 ? (
-            <option value={selectedModel}>{selectedModel}</option>
-          ) : (
-            models.map((model) => (
-              <option key={model} value={model}>
-                {model}
-              </option>
-            ))
-          )}
-        </select>
+        <div className={styles.modelRow}>
+          <span className={styles.modelLabel}>MODEL</span>
+          <select
+            className={styles.modelSelect}
+            value={selectedModel}
+            onChange={(event) => setSelectedModel(event.target.value)}
+            aria-label="Local model"
+            disabled={models.length === 0}
+          >
+            {models.length === 0 ? (
+              <option value={selectedModel}>{selectedModel}</option>
+            ) : (
+              models.map((model) => (
+                <option key={model} value={model}>
+                  {model}
+                </option>
+              ))
+            )}
+          </select>
+        </div>
         <form className={styles.form} onSubmit={handleSubmit}>
           <span className={styles.prompt} aria-hidden="true">
             ›
@@ -55,6 +64,7 @@ export function CommandInput() {
             autoComplete="off"
           />
         </form>
+        <VoiceControls onFinalText={handleVoiceFinalText} paused={isAssistantBusy} />
       </div>
     </PanelFrame>
   );

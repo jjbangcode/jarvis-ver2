@@ -47,9 +47,14 @@ export function RuntimeStoreProvider({ children }: { children: ReactNode }) {
       const agents = orchestratorOverride
         ? snapshot.agents.map((agent) => (agent.id === orchestratorOverride.id ? orchestratorOverride : agent))
         : snapshot.agents;
-      return { coreState: coreStateOverride ?? snapshot.coreState, agents, ...shared };
+      return {
+        coreState: coreStateOverride ?? snapshot.coreState,
+        isAssistantBusy: coreStateOverride !== null,
+        agents,
+        ...shared,
+      };
     }
-    return { coreState: "idle", agents: RUNTIME_SCENARIOS[scenario].agents ?? [], ...shared };
+    return { coreState: "idle", isAssistantBusy: false, agents: RUNTIME_SCENARIOS[scenario].agents ?? [], ...shared };
   }, [scenario, snapshot, orchestratorOverride, coreStateOverride, models, selectedModel, setSelectedModel, sendCommand]);
 
   return <RuntimeStoreContext.Provider value={value}>{children}</RuntimeStoreContext.Provider>;
